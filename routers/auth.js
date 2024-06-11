@@ -1,20 +1,23 @@
+// packages
 const express = require("express");
-const {signUp,signIn} = require("../controllers/auth")
+
+// imports
+const { signUp, signIn } = require("../controllers/auth/basicAuth");
 const {
-  sendPassCode,
-  resetPassCode,
-  activePass,
-  resetPass,
-} = require("../controllers/verify");
+  sendPassEmail,
+  activeResetPass,
+  resetPassword,
+} = require("../controllers/auth/resetPassword");
 
+// init
 const authRouter = express.Router();
+const url = process.env.API_URL;
 
+// routers
 authRouter.post("/signUp", signUp);
 authRouter.post("/signIn", signIn);
-
-authRouter.post("/verify/sendPassCode", sendPassCode);
-authRouter.post("/verify/activePass", activePass);
-authRouter.post("/verify/resetPassCode", resetPassCode);
-authRouter.post("/verify/resetPass", resetPass);
+authRouter.post("/sendPassEmail", sendPassEmail);
+authRouter.post("/activeResetPass", activeResetPass);
+authRouter.post("/resetPassword", resetPassword);
 
 module.exports = authRouter;

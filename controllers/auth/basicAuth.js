@@ -1,9 +1,11 @@
-//const mongoose = require("mongoose");
+// packages
 const bcryptjs = require("bcryptjs");
-const User = require("../models/user");
 const jwt = require("jsonwebtoken");
-const { verifyEmail } = require("../controllers/verify");
 
+// imports
+const User = require("../../models/user");
+
+// routers
 const signUp = async (req, res) => {
   try {
     const { name, email, password, confirmPassword } = req.body;
@@ -33,13 +35,15 @@ const signUp = async (req, res) => {
         .json({ message: "the user with same email already exists!" });
     }
     const hashedPassword = await bcryptjs.hash(password, 8);
+    const code = `${Math.floor(100000 + Math.random() * 900000)}`;
     let user = new User({
       name,
       email,
       password: hashedPassword,
+      code,
     });
     user = await user.save();
-    return res.status(200).json({ message: "User Created" });
+    return res.status(200).json({ message: "user created successfully" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -54,11 +58,6 @@ const signIn = async (req, res) => {
         .status(400)
         .json({ message: "the user with this email not found!" });
     }
-    if (user.verify === false) {
-      return res
-        .status(400)
-        .json({ message: "the user with this email not verifyed!" });
-    }
     const isMatch = await bcryptjs.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: "Incorrect password." });
@@ -72,7 +71,6 @@ const signIn = async (req, res) => {
       statusCode: 200,
       status: true,
     });
-    //res.redirect(301, `${url}/home/start`);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

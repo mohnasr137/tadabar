@@ -16,8 +16,9 @@ app.use(cors());
 app.options("*", cors());
 app.use(express.json());
 app.use(`${url}/auth`, auth);
-app.get(`${url}/test`, (req, res) => {
-  res.send("hi, from test api");
+app.use(`/:error`, (req, res) => {
+  const { error } = req.params;
+  res.send(`hi from error:- you write ${error} and there is no api like this`);
 });
 
 //connection
@@ -30,5 +31,4 @@ mongoose
     console.log(err);
     console.log(process.env.CONNECTION_STRING);
   });
-
 app.listen(port, console.log(`server is listen in port:${port}`));
