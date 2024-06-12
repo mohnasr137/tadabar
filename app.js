@@ -1,12 +1,14 @@
-//packages
+// packages
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
-//routers
+// imports
 const auth = require("./routers/auth");
+const tajweed = require("./routers/tajweed");
+const authJwt = require("./middlewares/jwt");
 
-//starter
+// init
 const app = express();
 const port = process.env.PORT;
 const url = process.env.API_URL;
@@ -15,7 +17,11 @@ const url = process.env.API_URL;
 app.use(cors());
 app.options("*", cors());
 app.use(express.json());
+app.use(authJwt);
+
+// routers
 app.use(`${url}/auth`, auth);
+app.use(`${url}/tajweed`, tajweed);
 app.use(`/:error`, (req, res) => {
   const { error } = req.params;
   res.send(`hi from error:- you write ${error} and there is no api like this`);
