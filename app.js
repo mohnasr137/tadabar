@@ -6,6 +6,7 @@ const cors = require("cors");
 // imports
 const auth = require("./routers/auth");
 const tajweed = require("./routers/tajweed");
+const prayerTimes = require("./routers/prayerTimes");
 const authJwt = require("./middlewares/jwt");
 
 // init
@@ -17,11 +18,12 @@ const url = process.env.API_URL;
 app.use(cors());
 app.options("*", cors());
 app.use(express.json());
-app.use(authJwt);
+// app.use(authJwt);
 
 // routers
 app.use(`${url}/auth`, auth);
 app.use(`${url}/tajweed`, tajweed);
+app.use(`${url}/prayerTimes`, prayerTimes);
 app.use(`/:error`, (req, res) => {
   const { error } = req.params;
   res.send(`hi from error:- you write ${error} and there is no api like this`);
